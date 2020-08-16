@@ -281,3 +281,14 @@ db.getCollection('teacher').aggregate([
     }
   }
 ])
+
+db.getCollection('students').aggregate([
+       {
+            $lookup: {
+                   from: "teacher",
+                   localField: "class",
+                   foreignField: "class_curator",
+                   as: "curator"
+               }
+       }
+])
