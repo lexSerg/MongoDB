@@ -75,17 +75,24 @@ db.getCollection('students').find(
     ])
 
 // 14) Не працюючих батьків влаштувати офіціантами
-// !!!Не решена проблема принятия изменений в БД
-db.getCollection('students').aggregate([
-    {$unwind : '$parents'},
-    {$match : {'parents.profession' : {$exists : false}}},
-    {$group : {
-        '_id' : '$parents'
-        }},
-    {$set : {'parents.profession' : 'waiter'}}
-])
+// Без изменений в БД
+// db.getCollection('students').aggregate([
+//     {$unwind : '$parents'},
+//     {$match : {'parents.profession' : {$exists : false}}},
+//     {$group : {
+//         '_id' : '$parents'
+//         }},
+//     {$set : {'parents.profession' : 'waiter'}}
+// ])
 
-
+db.getCollection('students').update(
+    {$and :  
+       [ {'parents.profession' : null}, 
+          {parents : {$ne : null}}, 
+       ]},
+{$set : {'parents.$.profession' : 'waiter'}},
+{multi : true}
+)
 
 // 15) Вигнати дітей, які мають середній бал менше ніж 2.5
 // Выгоняем путем добавления нового поля
